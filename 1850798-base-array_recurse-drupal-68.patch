@@ -1,0 +1,129 @@
+diff --git a/includes/common.inc b/includes/common.inc
+index 31923f2..b4bffea 100644
+--- a/includes/common.inc
++++ b/includes/common.inc
+@@ -6481,6 +6481,44 @@ function element_set_attributes(array &$element, array $map) {
+ }
+ 
+ /**
++ * Recursively computes the difference of arrays with additional index check.
++ *
++ * This is a version of array_diff_assoc() that supports multidimensional
++ * arrays.
++ *
++ * @param array $array1
++ *   The array to compare from.
++ * @param array $array2
++ *   The array to compare to.
++ *
++ * @return array
++ *   Returns an array containing all the values from array1 that are not present
++ *   in array2.
++ */
++function drupal_array_diff_assoc_recursive($array1, $array2) {
++  $difference = array();
++
++  foreach ($array1 as $key => $value) {
++    if (is_array($value)) {
++      if (!array_key_exists($key, $array2) || !is_array($array2[$key])) {
++        $difference[$key] = $value;
++      }
++      else {
++        $new_diff = drupal_array_diff_assoc_recursive($value, $array2[$key]);
++        if (!empty($new_diff)) {
++          $difference[$key] = $new_diff;
++        }
++      }
++    }
++    elseif (!array_key_exists($key, $array2) || $array2[$key] !== $value) {
++      $difference[$key] = $value;
++    }
++  }
++
++  return $difference;
++}
++
++/**
+  * Sets a value in a nested array with variable depth.
+  *
+  * This helper function should be used when the depth of the array element you
+diff --git a/modules/simpletest/tests/common.test b/modules/simpletest/tests/common.test
+index 82e3055..97916e4 100644
+--- a/modules/simpletest/tests/common.test
++++ b/modules/simpletest/tests/common.test
+@@ -2630,3 +2630,75 @@ class FeedIconTest extends DrupalWebTestCase {
+   }
+ 
+ }
++
++/**
++ * Test array diff functions.
++ */
++class ArrayDiffUnitTest extends DrupalUnitTestCase {
++
++  /**
++   * Array to use for testing.
++   *
++   * @var array
++   */
++  protected $array1;
++
++  /**
++   * Array to use for testing.
++   *
++   * @var array
++   */
++  protected $array2;
++
++  public static function getInfo() {
++    return array(
++      'name' => 'Array differences',
++      'description' => 'Performs tests on drupal_array_diff_assoc_recursive().',
++      'group' => 'System',
++    );
++  }
++
++  function setUp() {
++    parent::setUp();
++
++    $this->array1 = array(
++      'same' => 'yes',
++      'different' => 'no',
++      'array_empty_diff' => array(),
++      'null' => NULL,
++      'int_diff' => 1,
++      'array_diff' => array('same' => 'same', 'array' => array('same' => 'same')),
++      'array_compared_to_string' => array('value'),
++      'string_compared_to_array' => 'value',
++      'new' => 'new',
++    );
++    $this->array2 = array(
++      'same' => 'yes',
++      'different' => 'yes',
++      'array_empty_diff' => array(),
++      'null' => NULL,
++      'int_diff' => '1',
++      'array_diff' => array('same' => 'different', 'array' => array('same' => 'same')),
++      'array_compared_to_string' => 'value',
++      'string_compared_to_array' => array('value'),
++    );
++  }
++
++
++  /**
++   * Tests drupal_array_diff_assoc_recursive().
++   */
++  public function testArrayDiffAssocRecursive() {
++    $expected = array(
++      'different' => 'no',
++      'int_diff' => 1,
++      // The 'array' key should not be returned, as it's the same.
++      'array_diff' => array('same' => 'same'),
++      'array_compared_to_string' => array('value'),
++      'string_compared_to_array' => 'value',
++      'new' => 'new',
++    );
++
++    $this->assertIdentical(drupal_array_diff_assoc_recursive($this->array1, $this->array2), $expected);
++  }
++}
