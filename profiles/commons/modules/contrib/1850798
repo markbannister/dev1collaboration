@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--[if IE]><script language="javascript" type="text/javascript" src="/sites/all/modules/flot/flot/excanvas.min.js"></script><![endif]-->
+<link rel="shortcut icon" href="/misc/favicon.ico" type="image/x-icon" />
+  <title>#1850798: Add a recursive version of array_diff_assoc() | drupal.org</title>
+  <link type="text/css" rel="stylesheet" media="all" href="http://drupal.org/files/css/css_b7219c91063aff8091ec88e573006288.css" />
+  <script type="text/javascript" src="http://drupal.org/files/js/js_45e834fcb18a575502fd808bcecbf393.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, {"basePath":"\/","googleanalytics":{"trackOutbound":1,"trackMailto":1,"trackDownload":1,"trackDownloadExtensions":"7z|aac|arc|arj|asf|asx|avi|bin|csv|doc|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls|xml|z|zip"},"html5UserGeolocationPrecision":"1","jcarousel":{"ajaxPath":"\/jcarousel\/ajax\/views"},"project_issue":{"follower_count":"49"}});
+//--><!]]>
+</script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+if (Drupal.jsEnabled) { Drupal.flot = {}; }
+//--><!]]>
+</script>
+  <!--[if lte IE 6]><style>img, div#header-screen, a { behavior: url("/sites/all/themes/bluecheese/iepngfix.htc") }</style><![endif]-->
+</head>
+
+<body class="not-front not-logged-in page-node node-type-project-issue no-sidebars drupalorg-site-main">
+  <div id="skip-links">
+    <a href="#content">Skip to main content</a>
+    <a href="#search">Skip to search</a>
+  </div>
+    <div id="header" class="clear-block">
+    <div id="header-screen" class="clear-block">
+      <div id="header-inner" class="container-12 clear-block">
+        <div id="nav-header" class="grid-12">
+          <ul><li class="menu-2 first"><a href="/start" title="Getting Started with Drupal">Get Started</a></li>
+<li class="menu-4"><a href="/community" title="Drupal Community">Community</a></li>
+<li class="menu-16434"><a href="/documentation" title="Drupal Documentation">Documentation</a></li>
+<li class="menu-14"><a href="/support" title="Support for using Drupal">Support</a></li>
+<li class="menu-10468"><a href="/download" title="Download and Extend Drupal">Download &amp; Extend</a></li>
+<li class="menu-10"><a href="/drupal-services" title="Buy Drupal Products and Services">Marketplace</a></li>
+<li class="menu-25050 last"><a href="/about" title="About Drupal">About</a></li>
+</ul>        </div> <!-- /#nav-header -->
+
+        <div id="header-content" class="grid-12">
+          <div id="header-left" class="grid-7 alpha">
+            <div id="header-left-inner" class="grid-6 alpha">
+              <div id="site-name"><a href="/" title="Drupal">Drupal</a></div>
+                          </div> <!-- /#header-left-inner -->
+          </div> <!-- /#header-left -->
+
+          <div id="header-right" class="grid-5 omega">
+            <div id="header-right-inner">
+              <form action="/search/site"  accept-charset="UTF-8" method="post" id="search-theme-form">
+<div><div id="search">
+  <div class="form-item" id="edit-search-theme-form-1-wrapper">
+ <input type="text" maxlength="128" name="search_theme_form" id="edit-search-theme-form-1" size="15" value="" placeholder="Search drupal.org" class="form-text" />
+</div>
+  <input type="image" id="search-theme-form-submit" src="/sites/all/themes/bluecheese/images/btn-search.png" alt="Search" name="op" />
+  <div id="search-theme-form-advanced"><fieldset class=" collapsible collapsed"><legend>Refine your search</legend><div class="form-radios"><div class="form-divider"><div class="form-item" id="edit-meta-type--wrapper">
+ <label class="option" for="edit-meta-type-"><input type="radio" id="edit-meta-type-" name="meta_type" value=""  checked="checked"  class="form-radio" /> All</label>
+</div>
+<div class="form-item" id="edit-meta-type-module-wrapper">
+ <label class="option" for="edit-meta-type-module"><input type="radio" id="edit-meta-type-module" name="meta_type" value="module"   class="form-radio" /> Modules</label>
+</div>
+<div class="form-item" id="edit-meta-type-theme-wrapper">
+ <label class="option" for="edit-meta-type-theme"><input type="radio" id="edit-meta-type-theme" name="meta_type" value="theme"   class="form-radio" /> Themes</label>
+</div>
+</div><div class="form-item" id="edit-meta-type-documentation-wrapper">
+ <label class="option" for="edit-meta-type-documentation"><input type="radio" id="edit-meta-type-documentation" name="meta_type" value="documentation"   class="form-radio" /> Documentation</label>
+</div>
+<div class="form-item" id="edit-meta-type-forum-issues-wrapper">
+ <label class="option" for="edit-meta-type-forum-issues"><input type="radio" id="edit-meta-type-forum-issues" name="meta_type" value="forum-issues"   class="form-radio" /> Forums & Issues</label>
+</div>
+<div class="form-item" id="edit-meta-type-group-wrapper">
+ <label class="option" for="edit-meta-type-group"><input type="radio" id="edit-meta-type-group" name="meta_type" value="group"   class="form-radio" /> Groups</label>
+</div>
+</div></fieldset>
+</div>
+  <input type="hidden" name="form_build_id" id="form-07882dbb47dae069814b1c0db139bec9" value="form-07882dbb47dae069814b1c0db139bec9"  />
+<input type="hidden" name="form_id" id="edit-search-theme-form" value="search_theme_form"  />
+</div>
+
+</div></form>
+            </div> <!-- /#header-right-inner -->
+          </div> <!-- /#header-right -->
+        </div> <!-- /#header-content -->
+
+        <div id="nav-masthead" class="grid-12">
+          <ul><li class="homepage first"><a href="/home">Drupal Homepage</a></li>
+<li class="login-register last"><a href="/user?destination=node%2F1850798%3Fmode%3D2%26sort%3D2">Log in / Register</a></li>
+</ul>        </div> <!-- /#nav-masthead -->
+      </div> <!-- /#header-inner -->
+    </div>
+  </div> <!-- /#header -->
+
+  <div id="page" class="container-12 clear-block">
+    <div id="page-inner">
+
+      <div id="page-heading" class="grid-12">
+
+                  <div id="page-title-tools" class="clear-block">
+
+            <div class="grid-8 alpha">
+                                                <div id="page-title" class="h2">Download &amp; Extend</div>
+                                          </div>
+
+                          <div id="page-tools" class="grid-4 omega">
+                              </div> <!-- /#page-tools -->
+                      </div> <!-- /#page-title-tools -->
+
+                      <div id="nav-content" class="clear-block">
+              <ul class="links"><li class="home first"><a href="/download">Download &amp; Extend Home</a></li>
+<li class="core active"><a href="/project/drupal" class="active">Drupal Core</a></li>
+<li class="distributions"><a href="/project/distributions">Distributions</a></li>
+<li class="modules"><a href="/project/modules">Modules</a></li>
+<li class="themes last"><a href="/project/themes">Themes</a></li>
+</ul>            </div> <!-- /#nav-content -->
+          
+          <div class="breadcrumb"><a href="/project/issues/drupal">Issues</a></div>
+                      <h1 id="page-subtitle">Add a recursive version of array_diff_assoc()</h1>
+          
+        
+      </div> <!-- /#page-heading -->
+
+      <div id="column-left" class="grid-12">
+
+        
+        
+        <div id="content" class="clear-block">
+                    
+          <div id="content-inner" class="clear-block"><div id="node-1850798" class="node clear-block node-type-project_issue">
+
+  
+  
+      <div class="submitted">Posted by <a href="/user/15016" title="View user profile.">mvc</a> on <em>November 26, 2012 at 2:48pm</em></div>
+  
+  <div class="node-content">
+    <div class="project-issue"><div id="project-summary-container" class="clear-block">
+  <div id="project-issue-summary-links">
+    <div class="project-issue-follow-count">49 followers</div>    <div class="item-list"><h3>Jump to:</h3><ul class="internal-links"><li class="first"><a href="/node/1850798#comment-7320078" class="active">Most recent comment</a></li>
+<li class="last"><a href="/node/1850798#comment-7309832" class="active">Most recent attachment</a></li>
+</ul></div>  </div>
+  <div id="project-issue-summary-table" class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Project:</td><td>Drupal core</td> </tr>
+ <tr class="even"><td>Version:</td><td>7.x-dev</td> </tr>
+ <tr class="odd"><td>Component:</td><td>base system</td> </tr>
+ <tr class="even"><td>Category:</td><td>task</td> </tr>
+ <tr class="odd"><td>Priority:</td><td>normal</td> </tr>
+ <tr class="even"><td>Assigned:</td><td>Unassigned</td> </tr>
+ <tr class="odd"><td>Status:</td><td>reviewed &amp; tested by the community</td> </tr>
+ <tr class="even"><td>Issue tags:</td><td><a href="/project/issues/search/drupal?issue_tags=needs%20backport%20to%20D7">needs backport to D7</a>, <a href="/project/issues/search/drupal?issue_tags=php5.4">php5.4</a>, <a href="/project/issues/search/drupal?issue_tags=Quick%20fix">Quick fix</a>, <a href="/project/issues/search/drupal?issue_tags=VDC">VDC</a></td> </tr>
+</tbody>
+</table>
+</div>
+</div>
+<h2>Issue Summary</h2><p>views 7.x-3.x gives errors doing an array to string conversion with php 5.4: <span class="project-issue-status-4 project-issue-status-info"><a href="/node/1511396" title="Status: postponed">#1511396: php 5.4 and "Notice: Array to string conversion"</a></span></p>
+<p>in fact, any other module attempting to call array_diff_assoc() on multidimensional arrays will have the same problem. an appropriate solution would be to add a function called array_diff_assoc_recursive() based on comment #12 on that issue for use in views and anywhere else it's needed.</p>
+<p>since drupal 7 is supposed to support php 5.4, this will likely need to be backported once accepted into drupal 8.</p>
+<p>i wasn't immediately able to find an equivalent function in any library already bundled in drupal 8. my apologies if i've missed it and this is already there.</p>
+</div>  </div>
+
+  <div class="node-footer"><span class="links"><span class="comment_forbidden"><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></span></div></div>
+  <div id="comments">
+    <h2>Comments</h2>
+    <a id="comment-6899744"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6899744" class="active">#1</a></h3>
+    <div class="submitted">Posted by <a href="/user/382067" title="View user profile.">pfrenssen</a> on <em>January 3, 2013 at 9:21pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Category:</td><td>bug report</td><td>&raquo; feature request</td> </tr>
+ <tr class="even"><td>Status:</td><td>active</td><td>&raquo; needs review</td> </tr>
+</tbody>
+</table>
+</div></div><p>I'm very much in favor of this. There are real use cases for this, for example Views as mentioned above, but also Features (ref <span class="project-issue-status-7 project-issue-status-info"><a href="/node/1588596" title="Status: closed (fixed)">#1588596: Notice: Array to string conversion in features_export_prepare() (line 190 of features.export.inc)</a></span>), as well as Panels (ref <span class="project-issue-status-1 project-issue-status-info"><a href="/node/1762290" title="Status: active">#1762290: PHP 5.4 Issue with array_diff_assoc in plugins.inc</a></span>).</p>
+<p>Here is a patch for 8.x. I've looked around for the right spot to place this, and utility.inc looked like a good candidate.</p>
+
+  
+<div id="pift-results-1850798-6899744"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-1-core-array_diff_assoc_recursive.patch">1850798-1-core-array_diff_assoc_recursive.patch</a></td><td>1.63 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 50,535 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/414283">View details</a> | <a href="/pift/retest/414283">Re-test</a></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6917518"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6917518" class="active">#2</a></h3>
+    <div class="submitted">Posted by <a href="/user/99340" title="View user profile.">dawehner</a> on <em>January 8, 2013 at 9:23pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>So if we really want this now functionality there are sadly some unit-tests missing.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6919436"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6919436" class="active">#3</a></h3>
+    <div class="submitted">Posted by <a href="/user/382067" title="View user profile.">pfrenssen</a> on <em>January 9, 2013 at 9:44am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs review</td><td>&raquo; needs work</td> </tr>
+ <tr class="even"><td>Issue tags:</td><td></td><td>+<a href="/project/issues/search/drupal?issue_tags=Needs%20tests">Needs tests</a></td> </tr>
+</tbody>
+</table>
+</div></div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6921334"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6921334" class="active">#4</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>January 9, 2013 at 6:48pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs work</td><td>&raquo; needs review</td> </tr>
+ <tr class="even"><td>Issue tags:</td><td>-<a href="/project/issues/search/drupal?issue_tags=Needs%20tests">Needs tests</a></td><td></td> </tr>
+</tbody>
+</table>
+</div></div><p>I think this might fit better on the NestedArray helper class? Rather than in utility.inc, that doesn't really have much in.</p>
+<p>I have move it to NestedArray and added some tests. I also found out whilst doing this that the NestedArrayUnitTest is never actually tested. As the file has the old ArrayUnitTest name. So we should change that too, otherwise we have no tests :)</p>
+
+  
+<div id="pift-results-1850798-6921334"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-3.patch">1850798-3.patch</a></td><td>3.13 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 50,681 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/418168">View details</a> | <a href="/pift/retest/418168">Re-test</a></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6921400"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6921400" class="active">#5</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>January 9, 2013 at 7:00pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Category:</td><td>feature request</td><td>&raquo; task</td> </tr>
+</tbody>
+</table>
+</div></div><p>task as this is also fixing the test coverage.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6921414"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6921414" class="active">#6</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>January 9, 2013 at 7:05pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p><span class="project-issue-status-4 project-issue-status-info"><a href="/node/1511396" title="Status: postponed">#1511396: php 5.4 and "Notice: Array to string conversion"</a></span> is now postponed on this issue. I also fixed a quibble from the other issue that NULL values weren't being diffed because isset() was being used. Test should cover that too.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6921496"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6921496" class="active">#7</a></h3>
+    <div class="submitted">Posted by <a href="/user/99340" title="View user profile.">dawehner</a> on <em>January 9, 2013 at 7:26pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p></p><div class="codeblock"><code>+++ b/core/modules/system/lib/Drupal/system/Tests/Common/NestedArrayUnitTest.phpundefined<br />@@ -143,4 +143,30 @@ function testMergeDeepArray() {<br />+      'int_diff' =&gt; 1,<br />...<br />+      'int_diff' =&gt; '1',</code></div>
+<p>1 and '1' is confusing that. What about use 1 and 2?</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6921504"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6921504" class="active">#8</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>January 9, 2013 at 7:29pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Oh, the point was that they are both == but not ===.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6921674"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6921674" class="active">#9</a></h3>
+    <div class="submitted">Posted by <a href="/user/789644" title="View user profile.">olli</a> on <em>January 9, 2013 at 8:10pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p></p><div class="codeblock"><code>+++ b/core/lib/Drupal/Component/Utility/NestedArray.php<br />@@ -342,4 +342,41 @@ public static function mergeDeepArray(array $arrays, $preserve_integer_keys = FA<br />+  public static function diffAssocRecursiveArray(array $array1, array $array2) {</code></div>
+<p>Can we drop the last "Array" to/or keep parameters consistent with mergeDeep/mergeDeepArray?</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6921682"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6921682" class="active">#10</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>January 9, 2013 at 8:11pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Also changed the file docblock to Contains.. as we have to fix that line anyway.</p>
+
+  
+<div id="pift-results-1850798-6921682"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-9.patch">1850798-9.patch</a></td><td>3.13 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 49,684 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/418218">View details</a> | <a href="/pift/retest/418218">Re-test</a></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6921700"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6921700" class="active">#11</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>January 9, 2013 at 8:16pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Let's drop the Array, in that case. #10 is with this is without. The choice is yours.</p>
+
+  
+<div id="pift-results-1850798-6921700"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-11.patch">1850798-11.patch</a></td><td>3.11 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 49,746 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/418228">View details</a> | <a href="/pift/retest/418228">Re-test</a></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6923966"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6923966" class="active">#12</a></h3>
+    <div class="submitted">Posted by <a href="/user/9446" title="View user profile.">chx</a> on <em>January 10, 2013 at 11:50am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Here's my comprehension, please fix if I am wrong: Wherever array_diff_assoc was used previously, before 5.4 , if it encountered a multidimensional then it treated the value as 'String' without complaining. Now it complains. To fix the complaint we are not making a similarly ... well not broken, but interesting behaving function. Instead, we create a recursive one. If you were using array_diff_assoc as documented, if you really are just interested in top level differences then.. tough luck? I love PHP. We are basically arguing that unless you know for sure that your array is one dimensional array_diff_assoc is useless and what you really want is recursive.</p>
+<p>There was a time when I was this kind of sure. The years in the Drupal core trenches have shattered that. As this function has nothing to do with NestedArray let's move it to a different class and add a nonrecursive version, basically the 5.3 version of array_diff_assoc just to make sure.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6924206"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6924206" class="active">#13</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>January 10, 2013 at 1:11pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Ok, fair point. In that case I created <span class="project-issue-status-7 project-issue-status-info"><a href="/node/1885180" title="Status: closed (fixed)">#1885180: NestedArray tests are never run</a></span> to fix the nested array tests not running, as this will not have anything to do with that file anymore.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6924246"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6924246" class="active">#14</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>January 10, 2013 at 1:20pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Assigned to:</td><td>Anonymous</td><td>&raquo; damiankloip</td> </tr>
+</tbody>
+</table>
+</div></div><p>Working on this.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6924296"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6924296" class="active">#15</a></h3>
+    <div class="submitted">Posted by <a href="/user/382067" title="View user profile.">pfrenssen</a> on <em>January 10, 2013 at 1:31pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>@chx There are some instances (in contrib) that are using array_diff_assoc() where they are expecting this to work for multidimensional arrays but were not notified before PHP 5.4 that this is actually not working. This issue just provides the recursive version, it does not assume that all instances of array_diff_assoc() should be replaced with this.</p>
+<p>We do need a PHP5.4 compatible version of array_diff_assoc() for that indeed. diffAssocRoot() ?</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6924504"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6924504" class="active">#16</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>January 10, 2013 at 2:32pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Yeah, I'm working on just a diffAssoc method to go with the recursive version.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6924588"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6924588" class="active">#17</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>January 10, 2013 at 2:53pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Sorry, got sidetracked, how about this? Moved into a diffArray class. Tests included.</p>
+
+  
+<div id="pift-results-1850798-6924588"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-17.patch">1850798-17.patch</a></td><td>4.63 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 49,476 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/418643">View details</a> | <a href="/pift/retest/418643">Re-test</a></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6925098"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6925098" class="active">#18</a></h3>
+    <div class="submitted">Posted by <a href="/user/9446" title="View user profile.">chx</a> on <em>January 10, 2013 at 5:02pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs review</td><td>&raquo; needs work</td> </tr>
+</tbody>
+</table>
+</div></div><p></p><div class="codeblock"><code>+   * This is a PHP 5.4 safe version of array_diff_assoc().</code></div>
+<p>That's one very small step above just writing <code>bananas</code> as doxygen but as useful as.</p>
+<p>Something like: This function is the same as array_diff_assoc(): compares array1 against array2 and returns the difference. However, while array_diff_assoc considers key =&gt; value1 and key =&gt; value2 the same if (string) $value1 === (string) $value2 this version does away with the string cast and runs $value1 === $value2.</p>
+<p>Reading that it comes clear that's not what we want. The code IMNSHO still should do <code>(string) $value1 === (string) $value2</code> and then the doxygen should read (yes, effin long, but this is a weirdo):</p>
+<p>This function is the same as array_diff_assoc() but multidimensional arrays do not throw notices. Note that as the comparison is made by (string) $value1 === (string) $value2 every array element is considered equal. This is, again, the same as  array_diff_assoc()  the only reason Drupal provides this function is since PHP 5.4 this casting of arrays to strings throws a notice. If you want to use array_diff_assoc() as it was up to PHP 5.3 then use this function but consider the consequences -- it should be rare to use this function.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6925138"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6925138" class="active">#19</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>January 10, 2013 at 5:14pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs work</td><td>&raquo; needs review</td> </tr>
+</tbody>
+</table>
+</div></div><p>All valid points, it should behave the same as array_diff_assoc. Try this.</p>
+<p>Damn, I forgot to add the bananas part....</p>
+
+  
+<div id="pift-results-1850798-6925138"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-19.patch">1850798-19.patch</a></td><td>4.7 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 49,540 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/418768">View details</a> | <a href="/pift/retest/418768">Re-test</a></td> </tr>
+ <tr class=" even"><td><a href="http://drupal.org/files/interdiff_2575.txt">interdiff.txt</a></td><td>1.73 KB</td><td><em>Ignored</em></td><td><em>None</em></td><td><em>None</em></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6925174"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6925174" class="active">#20</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>January 10, 2013 at 5:20pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Assigned to:</td><td>damiankloip</td><td>&raquo; Anonymous</td> </tr>
+</tbody>
+</table>
+</div></div><p>Sorry, also including chx's docblock for the recursive method.</p>
+
+  
+<div id="pift-results-1850798-6925174"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-20.patch">1850798-20.patch</a></td><td>5.18 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 49,501 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/418773">View details</a> | <a href="/pift/retest/418773">Re-test</a></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6925192"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6925192" class="active">#21</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>January 10, 2013 at 5:27pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>tim.plunkett pointed out this needs to be DiffArray and not diffArray not sure why this was like that to be honest, EVERY class in drupal is Capitalised!</p>
+
+  
+<div id="pift-results-1850798-6925192"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-21.patch">1850798-21.patch</a></td><td>5.18 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 49,492 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/418783">View details</a> | <a href="/pift/retest/418783">Re-test</a></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6925246"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6925246" class="active">#22</a></h3>
+    <div class="submitted">Posted by <a href="/user/382067" title="View user profile.">pfrenssen</a> on <em>January 10, 2013 at 5:39pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs review</td><td>&raquo; needs work</td> </tr>
+</tbody>
+</table>
+</div></div><p>The documentation has been put above the wrong function :)</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6925276"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6925276" class="active">#23</a></h3>
+    <div class="submitted">Posted by <a href="/user/382067" title="View user profile.">pfrenssen</a> on <em>January 10, 2013 at 5:47pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs work</td><td>&raquo; needs review</td> </tr>
+</tbody>
+</table>
+</div></div><p>Updated documentation.</p>
+
+  
+<div id="pift-results-1850798-6925276"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-23-core-array_diff.patch">1850798-23-core-array_diff.patch</a></td><td>5.02 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 49,651 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/418798">View details</a> | <a href="/pift/retest/418798">Re-test</a></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6925282"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6925282" class="active">#24</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>January 10, 2013 at 5:48pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Hehe, sorry everyone.</p>
+
+  
+<div id="pift-results-1850798-6925282"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-23.patch">1850798-23.patch</a></td><td>5.02 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 49,663 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/418803">View details</a> | <a href="/pift/retest/418803">Re-test</a></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6929066"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6929066" class="active">#25</a></h3>
+    <div class="submitted">Posted by <a href="/user/382067" title="View user profile.">pfrenssen</a> on <em>January 11, 2013 at 3:23pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>#23 and #24 are essentially the same, some minor documentation differences.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6929078"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6929078" class="active">#26</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>January 11, 2013 at 3:25pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Which one do we want? I guess that's the question :)</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-6996510"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-6996510" class="active">#27</a></h3>
+    <div class="submitted">Posted by <a href="/user/241634" title="View user profile.">tim.plunkett</a> on <em>January 29, 2013 at 3:14am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Component:</td><td>views.module</td><td>&raquo; base system</td> </tr>
+ <tr class="even"><td>Issue tags:</td><td></td><td>+<a href="/project/issues/search/drupal?issue_tags=VDC">VDC</a></td> </tr>
+</tbody>
+</table>
+</div></div><p>Tagging.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7017692"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7017692" class="active">#28</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>February 2, 2013 at 4:32pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Just spotted a small typo.</p>
+
+  
+<div id="pift-results-1850798-7017692"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-28.patch">1850798-28.patch</a></td><td>5.02 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 49,099 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/437123">View details</a> | <a href="/pift/retest/437123">Re-test</a></td> </tr>
+ <tr class=" even"><td><a href="http://drupal.org/files/interdiff_3021.txt">interdiff.txt</a></td><td>699 bytes</td><td><em>Ignored</em></td><td><em>None</em></td><td><em>None</em></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7017700"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7017700" class="active">#29</a></h3>
+    <div class="submitted">Posted by <a href="/user/99340" title="View user profile.">dawehner</a> on <em>February 2, 2013 at 4:33pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs review</td><td>&raquo; reviewed &amp; tested by the community</td> </tr>
+</tbody>
+</table>
+</div></div><p>So I think this patch is ready to roll</p>
+<ul><li>The code is proper documented</li>
+<li>We have tests</li>
+</ul><p>There should a follow up to convert all existing calls to array_diff_recursive.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7019526"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7019526" class="active">#30</a></h3>
+    <div class="submitted">Posted by <a href="/user/9446" title="View user profile.">chx</a> on <em>February 3, 2013 at 11:32am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Just a question, wouldn't a @array_diff_assoc work...?</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7046546"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7046546" class="active">#31</a></h3>
+    <div class="submitted">Posted by <a href="/user/24967" title="View user profile.">webchick</a> on <em>February 9, 2013 at 11:45am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>reviewed &amp; tested by the community</td><td>&raquo; needs review</td> </tr>
+</tbody>
+</table>
+</div></div><p>That's a fair question, which would eliminate a lot of code here. Though we generally try and avoid @ operators because they make debugging frustrating.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7050248"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7050248" class="active">#32</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>February 10, 2013 at 8:23pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Yeah, I think I agree. using @ would supress the error and definitely work here, but that is a funny and weird standard to implement.</p>
+<p>So I guess that means I stil prefer the verbose way of this patch, which also gives us the arrayDiffRecursive method. As seen in the tests this will provide nested diffs for multi dimensional arrays. So this does what array_diff_assoc cannot anyway. So I guess it's not much more code just to implement the arrayDiff method. A worthwhile trade off, I would say.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7096144"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7096144" class="active">#33</a></h3>
+    <div class="submitted">Posted by <a href="/user/9446" title="View user profile.">chx</a> on <em>February 22, 2013 at 6:46am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>I think the best is to axe the body of diffAssoc and just do a return @array_diff_assoc . I agree arrayDiffRecursive is useful.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7097008"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7097008" class="active">#34</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>February 22, 2013 at 12:34pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Yp, that works for me. Here is a new version with diffAssoc just acting as a wrapper around array_diff_assoc but suppressing the errors.</p>
+
+  
+<div id="pift-results-1850798-7097008"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-34.patch">1850798-34.patch</a></td><td>4.6 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 52,299 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/451363">View details</a> | <a href="/pift/retest/451363">Re-test</a></td> </tr>
+ <tr class=" even"><td><a href="http://drupal.org/files/interdiff_3354.txt">interdiff.txt</a></td><td>1.75 KB</td><td><em>Ignored</em></td><td><em>None</em></td><td><em>None</em></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7102744"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7102744" class="active">#35</a></h3>
+    <div class="submitted">Posted by <a href="/user/9446" title="View user profile.">chx</a> on <em>February 24, 2013 at 9:05am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs review</td><td>&raquo; reviewed &amp; tested by the community</td> </tr>
+</tbody>
+</table>
+</div></div><p>i need to go back and tag a couple of issue with this tag. anyways, this is good to go.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7118618"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7118618" class="active">#36</a></h3>
+    <div class="submitted">Posted by <a href="/user/24967" title="View user profile.">webchick</a> on <em>February 28, 2013 at 3:04am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>reviewed &amp; tested by the community</td><td>&raquo; fixed</td> </tr>
+</tbody>
+</table>
+</div></div><p>Ok, let's do this.</p>
+<p>Committed and pushed to 8.x. Thanks!</p>
+<p>Do we need to backport this to D7? I noticed some PHP 5.4 CTools-related issues in the Commons queue the other day.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7118748"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7118748" class="active">#37</a></h3>
+    <div class="submitted">Posted by <a href="/user/1530114" title="View user profile.">SebaSOFT</a> on <em>February 28, 2013 at 3:58am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Definitivelly happening en D7</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7118772"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7118772" class="active">#38</a></h3>
+    <div class="submitted">Posted by <a href="/user/24967" title="View user profile.">webchick</a> on <em>February 28, 2013 at 4:06am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Version:</td><td>8.x-dev</td><td>&raquo; 7.x-dev</td> </tr>
+ <tr class="even"><td>Status:</td><td>fixed</td><td>&raquo; patch (to be ported)</td> </tr>
+ <tr class="odd"><td>Issue tags:</td><td></td><td>+<a href="/project/issues/search/drupal?issue_tags=needs%20backport%20to%20D7">needs backport to D7</a></td> </tr>
+</tbody>
+</table>
+</div></div><p>Ok, trying this then.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7121088"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7121088" class="active">#39</a></h3>
+    <div class="submitted">Posted by <a href="/user/81265" title="View user profile.">hoesi</a> on <em>February 28, 2013 at 4:06pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>I can confirm that this is also an issue with D7 (e.g. on saving panels with simple cache enabled, and the likes). :)</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7131348"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7131348" class="active">#40</a></h3>
+    <div class="submitted">Posted by <a href="/user/1347126" title="View user profile.">ACF</a> on <em>March 3, 2013 at 11:34pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>patch (to be ported)</td><td>&raquo; needs review</td> </tr>
+</tbody>
+</table>
+</div></div><p>Not sure if naming convention is correct or even if i've put stuff in the correct place, but a first go at porting this patch to D7</p>
+
+  
+<div id="pift-results-1850798-7131348"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-base-array_recurse-drupal-40.patch">1850798-base-array_recurse-drupal-40.patch</a></td><td>4.21 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 39,890 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/457513">View details</a> | <a href="/pift/retest/457513">Re-test</a></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7133700"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7133700" class="active">#41</a></h3>
+    <div class="submitted">Posted by <a href="/user/1415930" title="View user profile.">rabbit_media</a> on <em>March 4, 2013 at 4:16pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Hi Alasdair, i've noticed this issue on a project this morning.</p>
+<p>I'm getting the error:<br />
+Notice: Array to string conversion in module_implements() (line 710 of ~/includes/module.inc).</p>
+<p>I have entity_translation installed and the function:</p>
+<p>$list = module_list(FALSE, FALSE, $sort);</p>
+<p>returns a list where $list['entity_translation'] = 'entity_translation' appears twice and therefore is seen in the loop as an array.</p>
+<p>The last patch didn't fix this, do you want me to investigate this use-case further or are you on it?</p>
+<p>Adam</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7134174"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7134174" class="active">#42</a></h3>
+    <div class="submitted">Posted by <a href="/user/1347126" title="View user profile.">ACF</a> on <em>March 4, 2013 at 5:55pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Hey,</p>
+<p>This patch just provides the array_diff_assoc_recursive function that should solve the problem.  It doesn't actually replace any instances of array_diff_assoc which are causing a problem in the first place.  That will have to be done in a different patch once some solution gets committed.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7141906"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7141906" class="active">#43</a></h3>
+    <div class="submitted">Posted by <a href="/user/1415930" title="View user profile.">rabbit_media</a> on <em>March 6, 2013 at 12:01pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>It turns out my particular issue is traced back to the metatag module adding the 'entity_translation' items to the hook_info array (in module_hook_info). Because metatag and entity_translation are both adding the entity_translation hooks to the array, we get the problem where $hook_info[$hook]['group'] is an array, not a string:</p>
+<p> $include_file = isset($hook_info[$hook]['group']) &amp;&amp; module_load_include('inc', $module, $module . '.' . $hook_info[$hook]['group']);</p>
+<p>In my previous post, i though the issue was coming from:</p>
+<p>$list = module_list(FALSE, FALSE, $sort);</p>
+<p>But it's not, it's coming from:</p>
+<p>$hook_info = module_hook_info();</p>
+<p>Perhaps there could be something put in place to trap these events from occurring, but I guess that would be a separate issue to this one.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7143444"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7143444" class="active">#44</a></h3>
+    <div class="submitted">Posted by <a href="/user/382067" title="View user profile.">pfrenssen</a> on <em>March 6, 2013 at 5:23pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs review</td><td>&raquo; needs work</td> </tr>
+</tbody>
+</table>
+</div></div><p>Very nice to see this move forward!</p>
+<ul><li>
+<p>The function names used could use some discussion. At the moment these are <code>drupal_array_diff_assoc()</code> and <code>array_diff_assoc_recursive()</code> (without the "drupal_" prefix). I'm personally OK with these choices.</p>
+</li>
+<li>
+<div class="codeblock"><code>+/**<br />+ * Test utility functionality in utility.inc.<br />+ */<br />+class ArrayRecursiveUnitTest extends DrupalUnitTestCase {</code></div>
+<p>Docblock of the test needs to be updated to something more relevant, this has been copied from utility.inc tests.</p>
+</li>
+<li>
+<div class="codeblock"><code>+  public static function getInfo() {<br />+    return array(<br />+      'name' =&gt; 'Array diff assoc tests',<br />+      'description' =&gt; 'Tests that the array_diff_assoc_recursive function works.',<br />+      'group' =&gt; 'System',<br />+    );<br />+  }</code></div>
+<p>Improve the wording a bit, what about:</p>
+<p></p><div class="codeblock"><code>+      'name' =&gt; 'Array differences',<br />+      'description' =&gt; 'Performs tests on drupal_array_diff_assoc() and array_diff_assoc_recursive().',</code></div></li>
+<li>
+<div class="codeblock"><code>+   /**<br />+   * Tests function drupal_array_diff_assoc.<br />+   */</code></div>
+<p>The first line has one preceding space too many. I also would shorten this description to "Tests drupal_array_diff_assoc().".</p>
+</li>
+<li>
+<div class="codeblock"><code>+  /**<br />+   * Tests function array_diff_assoc_recursive.<br />+   */</code></div>
+<p>Same as above, shorten to "Tests array_diff_assoc_recursive().".</p>
+</li>
+<li>
+<p>An empty line is added at the very end of the test.</p>
+</li>
+</ul><p>Someone else should also best take a look, I can't RTBC this as it still contains most of my patch from #1.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7145024"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7145024" class="active">#45</a></h3>
+    <div class="submitted">Posted by <a href="/user/1347126" title="View user profile.">ACF</a> on <em>March 6, 2013 at 11:20pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs work</td><td>&raquo; needs review</td> </tr>
+</tbody>
+</table>
+</div></div><p>Updated with the suggested changes.</p>
+
+  
+<div id="pift-results-1850798-7145024"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-base-array_recurse-drupal-45.patch">1850798-base-array_recurse-drupal-45.patch</a></td><td>4.18 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 39,884 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/459693">View details</a> | <a href="/pift/retest/459693">Re-test</a></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7146220"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7146220" class="active">#46</a></h3>
+    <div class="submitted">Posted by <a href="/user/382067" title="View user profile.">pfrenssen</a> on <em>March 7, 2013 at 7:29am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Looking good! Just one minor comment, I would indicate the function names by putting parentheses () behind them:</p>
+<p></p><div class="codeblock"><code>+  /**<br />+   * Tests drupal_array_diff_assoc.<br />+   */<br />...<br />+  /**<br />+   * Tests array_diff_assoc_recursive.<br />+   */</code></div><br />
+to<br /><div class="codeblock"><code>+  /**<br />+   * Tests drupal_array_diff_assoc().<br />+   */<br />...<br />+  /**<br />+   * Tests array_diff_assoc_recursive().<br />+   */</code></div>
+<p>Then it is consistent with the docblocks of hook implementations which are all over Drupal :)</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7146506"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7146506" class="active">#47</a></h3>
+    <div class="submitted">Posted by <a href="/user/1347126" title="View user profile.">ACF</a> on <em>March 7, 2013 at 9:06am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>change made.</p>
+
+  
+<div id="pift-results-1850798-7146506"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-base-array_recurse-drupal-47.patch">1850798-base-array_recurse-drupal-47.patch</a></td><td>4.19 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 40,013 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/459983">View details</a> | <a href="/pift/retest/459983">Re-test</a></td> </tr>
+ <tr class=" even"><td><a href="http://drupal.org/files/interdiff_3579.txt">interdiff.txt</a></td><td>693 bytes</td><td><em>Ignored</em></td><td><em>None</em></td><td><em>None</em></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7149822"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7149822" class="active">#48</a></h3>
+    <div class="submitted">Posted by <a href="/user/382067" title="View user profile.">pfrenssen</a> on <em>March 7, 2013 at 10:43pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs review</td><td>&raquo; reviewed &amp; tested by the community</td> </tr>
+</tbody>
+</table>
+</div></div><p>Thanks! This looks perfect to me.</p>
+<p>There is some code from me in the patch but as this was already committed to D8 I suppose it's fine for me to RTBC the backport :)</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7152164"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7152164" class="active">#49</a></h3>
+    <div class="submitted">Posted by <a href="/user/124982" title="View user profile.">David_Rothstein</a> on <em>March 8, 2013 at 2:46pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Version:</td><td>7.x-dev</td><td>&raquo; 8.x-dev</td> </tr>
+ <tr class="even"><td>Status:</td><td>reviewed &amp; tested by the community</td><td>&raquo; needs work</td> </tr>
+</tbody>
+</table>
+</div></div><p>I don't understand the first half of the patch.  The PHP notice is thrown for a good reason; why would we want to suppress it?</p>
+<p>The reason is that array_diff_assoc() is not intended for multidimensional arrays and if you try to use it that way the behavior is extremely unexpected:</p>
+<p></p><div class="codeblock"><code>$ php -r "print_r(array_diff_assoc(array(array('these two arrays')), array(array('are very very different'))));"<br /><br />Array<br />(<br />)</code></div>
+<p>In an ideal world maybe the behavior would be different, but as long as it's not going to be I think it's much better to have a PHP notice to warn you about it than to do the above silently.</p>
+<p>If there's ever a situation where someone really does expect the above behavior, they can add the "@" themselves (it's the kind of situation that would warrant a code comment anyway).  But I do not see the point of providing a helper function for that, especially since this isn't the only function that behaves that way - e.g., array_diff() does the exact same thing.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7152168"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7152168" class="active">#50</a></h3>
+    <div class="submitted">Posted by <a href="/user/124982" title="View user profile.">David_Rothstein</a> on <em>March 8, 2013 at 2:48pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Of interest: <a href="https://bugs.php.net/bug.php?id=60278" title="https://bugs.php.net/bug.php?id=60278" rel="nofollow">https://bugs.php.net/bug.php?id=60278</a></p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7153568"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7153568" class="active">#51</a></h3>
+    <div class="submitted">Posted by <a href="/user/81265" title="View user profile.">hoesi</a> on <em>March 8, 2013 at 8:27pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <blockquote><p>If there's ever a situation where someone really does expect the above behavior, they can add the "@" themselves (it's the kind of situation that would warrant a code comment anyway). But I do not see the point of providing a helper function for that, especially since this isn't the only function that behaves that way - e.g., array_diff() does the exact same thing.</p></blockquote>
+<p>Seconded. The drupal_array_diff_assoc() wrapper could be a potential pitfall if people use it without being fully aware of the ramifications (caution is given in the docblock, but still...). It also seems rather redundant (adding extra lines of code without actually simplifying anything) considering that the developer can, as David pointed out, easily add the @ themselves if they knowingly/intentionally wish to suppress the notice.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7157548"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7157548" class="active">#52</a></h3>
+    <div class="submitted">Posted by <a href="/user/819534" title="View user profile.">magicmyth</a> on <em>March 9, 2013 at 8:35pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>I'm probably missing something here but part of this function does not make sense to me. The following condition is contradicting itself.<br /><code>if (!array_key_exists($key, $array2) &amp;&amp; !is_array($array2[$key])) {</code><br />
+The first part of the condition to me states: If $array2 does not have the following $key. So when it checks the next condition (is the value an array?). It will throw a notice because it is basically checking an undeclared variable. To me it seems this should be using an || instead of an &amp;&amp;.</p>
+<p>Seeing as this exact same logic has already been reviewed and applied to Drupal 8 I'm guessing my brain is not comprehending this correctly. However I tested this out on Features, which is one of the (many) modules currently miss-using array_diff_assoc on line 208 of features.export.inc and it did indeed throw out the expected notice at that line of code in array_diff_assoc_recursive() because the index key did not exist.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7157894"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7157894" class="active">#53</a></h3>
+    <div class="submitted">Posted by <a href="/user/1037976" title="View user profile.">damiankloip</a> on <em>March 9, 2013 at 10:08pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Hmm, I think you might be right. This should be || and not &amp;&amp;. I guess the tests should be updated too. This might be better material for a follow up?</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7170604"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7170604" class="active">#54</a></h3>
+    <div class="submitted">Posted by <a href="/user/124982" title="View user profile.">David_Rothstein</a> on <em>March 12, 2013 at 10:09pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs work</td><td>&raquo; needs review</td> </tr>
+</tbody>
+</table>
+</div></div><p>Well, we can't backport without fixing that bug first anyway.  So here's a patch that does both - removes diffAssoc() and fixes the bug in diffAssocRecursive().</p>
+<p>For backport, by the way, I'd suggest drupal_array_diff_assoc_recursive() rather than array_diff_assoc_recursive()?  Seems more consistent with how we usually do those "we wish PHP provided this" functions, e.g. drupal_array_merge_deep().</p>
+
+  
+<div id="pift-results-1850798-7170604"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-fail odd"><td><a href="http://drupal.org/files/array-diff-recursive-followup-1850798-54-TESTS-ONLY.patch">array-diff-recursive-followup-1850798-54-TESTS-ONLY.patch</a></td><td>2.86 KB</td><td>Idle</td><td>FAILED: [[SimpleTest]]: [MySQL] 53,111 pass(es), 0 fail(s), and 2 exception(s).</td><td><a href="http://qa.drupal.org/pifr/test/465663">View details</a> | <a href="/pift/retest/465663">Re-test</a></td> </tr>
+ <tr class="pift-pass even"><td><a href="http://drupal.org/files/array-diff-recursive-followup-1850798-54.patch">array-diff-recursive-followup-1850798-54.patch</a></td><td>3.24 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 53,381 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/465668">View details</a> | <a href="/pift/retest/465668">Re-test</a></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7170626"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7170626" class="active">#55</a></h3>
+    <div class="submitted">Posted by <a href="/user/124982" title="View user profile.">David_Rothstein</a> on <em>March 12, 2013 at 10:18pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Title:</td><td>need array_diff_assoc_recursive() for php 5.4</td><td>&raquo; Add a recursive version of array_diff_assoc()</td> </tr>
+</tbody>
+</table>
+</div></div><p>Better title; this doesn't really have anything to do with PHP 5.4 except that PHP 5.4 is noisier about it.</p>
+<p>Note that <span class="project-issue-status-13 project-issue-status-info"><a href="/node/1525176" title="Status: needs work">#1525176: Using array_diff_assoc() for multilevel arrays in DrupalDefaultEntityController-&gt;cacheGet()</a></span> is another issue which might be able to use this.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7196234"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7196234" class="active">#56</a></h3>
+    <div class="submitted">Posted by <a href="/user/99340" title="View user profile.">dawehner</a> on <em>March 19, 2013 at 9:46pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs review</td><td>&raquo; reviewed &amp; tested by the community</td> </tr>
+</tbody>
+</table>
+</div></div><p>Great!</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7214356"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7214356" class="active">#57</a></h3>
+    <div class="submitted">Posted by <a href="/user/65776" title="View user profile.">xjm</a> on <em>March 24, 2013 at 7:17pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p><a href="#comment-7170604" rel="nofollow">#54</a>: <a href="#pift-results-1850798" rel="nofollow">array-diff-recursive-followup-1850798-54.patch</a> queued for re-testing.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7224472"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7224472" class="active">#58</a></h3>
+    <div class="submitted">Posted by <a href="/user/65776" title="View user profile.">xjm</a> on <em>March 27, 2013 at 1:49am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Issue tags:</td><td></td><td>+<a href="/project/issues/search/drupal?issue_tags=Quick%20fix">Quick fix</a></td> </tr>
+</tbody>
+</table>
+</div></div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7224826"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7224826" class="active">#59</a></h3>
+    <div class="submitted">Posted by <a href="/user/24967" title="View user profile.">webchick</a> on <em>March 27, 2013 at 5:01am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Version:</td><td>8.x-dev</td><td>&raquo; 7.x-dev</td> </tr>
+ <tr class="even"><td>Status:</td><td>reviewed &amp; tested by the community</td><td>&raquo; patch (to be ported)</td> </tr>
+</tbody>
+</table>
+</div></div><p>Thanks, David, for your ever-watchful eye. :)</p>
+<p>Committed and pushed to 8.x. Trying this on 7.x again.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7224932"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7224932" class="active">#60</a></h3>
+    <div class="submitted">Posted by <a href="/user/389011" title="View user profile.">geerlingguy</a> on <em>March 27, 2013 at 6:11am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>Is one of the earlier patches to be reviewed? Or does just the follow-up need to be ported?</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7284406"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7284406" class="active">#61</a></h3>
+    <div class="submitted">Posted by <a href="/user/1159272" title="View user profile.">gunwald</a> on <em>April 11, 2013 at 12:01am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>I tried to commit the patch from #54 and got:</p>
+<p></p><div class="codeblock"><code>patch -p1  &lt; array-diff-recursive-followup-1850798-54.patch <br />patching file core/lib/Drupal/Component/Utility/DiffArray.php<br />Hunk #1 FAILED at 13.<br />Hunk #2 FAILED at 54.<br />2 out of 2 hunks FAILED -- saving rejects to file core/lib/Drupal/Component/Utility/DiffArray.php.rej<br />patching file core/modules/system/lib/Drupal/system/Tests/Common/DiffArrayUnitTest.php<br />Hunk #1 FAILED at 47.<br />Hunk #2 FAILED at 56.<br />Hunk #3 FAILED at 80.<br />3 out of 3 hunks FAILED -- saving rejects to file core/modules/system/lib/Drupal/system/Tests/Common/DiffArrayUnitTest.php.rej</code></div>
+<p>Is there any way to work around that problem besides downgrading PHP?</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7285084"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7285084" class="active">#62</a></h3>
+    <div class="submitted">Posted by <a href="/user/161217" title="View user profile.">Jorrit</a> on <em>April 11, 2013 at 4:57am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <p>gunwald: It looks like you're trying to patch Drupal 8. The pach is already in Drupal 8, see #59.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7299468"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7299468" class="active">#63</a></h3>
+    <div class="submitted">Posted by <a href="/user/124982" title="View user profile.">David_Rothstein</a> on <em>April 14, 2013 at 10:03pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <blockquote><p>
+Is one of the earlier patches to be reviewed? Or does just the follow-up need to be ported?
+</p></blockquote>
+<p>I think what we need here is a combination of <a href="http://drupal.org/node/1850798#comment-7146506" rel="nofollow">#47</a> (already written for Drupal 7) and <a href="http://drupal.org/node/1850798#comment-7170604" rel="nofollow">#54</a> (needs to be backported from Drupal 8).</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7303330"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7303330" class="active">#64</a></h3>
+    <div class="submitted">Posted by <a href="/user/389011" title="View user profile.">geerlingguy</a> on <em>April 15, 2013 at 5:20pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>patch (to be ported)</td><td>&raquo; needs review</td> </tr>
+</tbody>
+</table>
+</div></div><p>Attached patch simply adds in the changes in #54 to the patch in #47, in the appropriate places. Letting the testbot take a whack at it.</p>
+
+  
+<div id="pift-results-1850798-7303330"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-fail odd"><td><a href="http://drupal.org/files/1850798-base-array_recurse-drupal-63.patch">1850798-base-array_recurse-drupal-63.patch</a></td><td>4.48 KB</td><td>Idle</td><td>FAILED: [[SimpleTest]]: [MySQL] 40,375 pass(es), 1 fail(s), and 0 exception(s).</td><td><a href="http://qa.drupal.org/pifr/test/491793">View details</a> | <a href="/pift/retest/491793">Re-test</a></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7304076"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7304076" class="active">#65</a></h3>
+    <div class="submitted">Posted by <a href="/user/180064" title="View user profile.">System Message</a> on <em>April 15, 2013 at 8:08pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs review</td><td>&raquo; needs work</td> </tr>
+</tbody>
+</table>
+</div></div><p>The last submitted patch, <a href="#pift-results-1850798" rel="nofollow">1850798-base-array_recurse-drupal-63.patch</a>, failed testing.</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7304124"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7304124" class="active">#66</a></h3>
+    <div class="submitted">Posted by <a href="/user/389011" title="View user profile.">geerlingguy</a> on <em>April 15, 2013 at 8:18pm</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs work</td><td>&raquo; needs review</td> </tr>
+</tbody>
+</table>
+</div></div><p>This gets the failing test working, but is it right?</p>
+
+  
+<div id="pift-results-1850798-7304124"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-base-array_recurse-drupal-66.patch">1850798-base-array_recurse-drupal-66.patch</a></td><td>4.57 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 40,417 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/491973">View details</a> | <a href="/pift/retest/491973">Re-test</a></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7306246"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7306246" class="active">#67</a></h3>
+    <div class="submitted">Posted by <a href="/user/59710" title="View user profile.">DeFr</a> on <em>April 16, 2013 at 9:16am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs review</td><td>&raquo; needs work</td> </tr>
+</tbody>
+</table>
+</div></div><p>@geerlingguy: There's a few things in #54 that are not in #66. DiffArray::diffAssoc was removed, which means that both the drupal_array_diff_assoc and its associated test function should be removed too. Removing it, you won't get the fail you had in #64.</p>
+<p>(Another point that's mentionned in #54 and that would probably be nice to include in a re-roll is renaming the array_diff_assoc_recursive function introduced in this patch to drupal_array_diff_assoc_recursive, to avoid potential function name collision in case PHP core introduce such a function in a future release)</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7309832"></a>
+<div class="comment comment-published clear-block comment-even"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7309832" class="active">#68</a></h3>
+    <div class="submitted">Posted by <a href="/user/389011" title="View user profile.">geerlingguy</a> on <em>April 17, 2013 at 1:43am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs work</td><td>&raquo; needs review</td> </tr>
+</tbody>
+</table>
+</div></div><ul><li>Removed drupal_array_diff_assoc and test (and cleaned up test comments).</li>
+<li>Renamed array_diff_assoc_recursive() to drupal_array_diff_assoc_recursive() everywhere it occurred.</li>
+</ul><p>This should hopefully get the green light again.</p>
+
+  
+<div id="pift-results-1850798-7309832"><table class="sticky-enabled">
+ <thead><tr><th>Attachment</th><th>Size</th><th>Status</th><th>Test result</th><th>Operations</th> </tr></thead>
+<tbody>
+ <tr class="pift-pass odd"><td><a href="http://drupal.org/files/1850798-base-array_recurse-drupal-68.patch">1850798-base-array_recurse-drupal-68.patch</a></td><td>3.48 KB</td><td>Idle</td><td>PASSED: [[SimpleTest]]: [MySQL] 40,333 pass(es).</td><td><a href="http://qa.drupal.org/pifr/test/493008">View details</a> | <a href="/pift/retest/493008">Re-test</a></td> </tr>
+</tbody>
+</table>
+</div>    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+<a id="comment-7320078"></a>
+<div class="comment comment-published clear-block comment-odd"><div class="comment-inner">
+  <div class="comment-heading">
+        <h3 class="comment-title"><a href="/node/1850798#comment-7320078" class="active">#69</a></h3>
+    <div class="submitted">Posted by <a href="/user/59710" title="View user profile.">DeFr</a> on <em>April 19, 2013 at 9:11am</em>        </div>
+  </div>
+  <div class="content">
+    <div class="clear-block">
+            <div class="project-issue"><div class="summary"><table>
+<tbody>
+ <tr class="odd"><td>Status:</td><td>needs review</td><td>&raquo; reviewed &amp; tested by the community</td> </tr>
+</tbody>
+</table>
+</div></div><p>Looks fine, match what was commited in D8 and the new test pass, so, RTBC :-)</p>
+    </div>
+        <ul class="links"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node%2F1850798%23comment-form">Login</a> or <a href="/user/register?destination=node%2F1850798%23comment-form">register</a> to post comments</span></li>
+</ul>  </div>
+</div></div>
+  </div>
+</div>
+                  </div> <!-- /#content -->
+
+      </div> <!-- /#column-left -->
+
+      
+          </div> <!-- /#page-inner -->
+  </div> <!-- /#page -->
+
+  <div id="footer">
+    <div id="footer-inner" class="container-12 clear-block">
+              <div id="footer-region" class="grid-12">
+          <div id="footer-region-inner" class="clear-block">
+            <div class="grid-footer alpha"><ul><li class="0 first"><a href="http://drupal.org/news">Drupal News</a></li>
+<li class="1"><a href="http://drupal.org/planet" title="News from Drupal community members">Planet Drupal</a></li>
+<li class="2"><a href="https://association.drupal.org/news" title="News from association.drupal.org">Association News</a></li>
+<li class="3"><a href="http://drupal.org/social-media" title="Drupal on social media">Social Media Directory</a></li>
+<li class="4"><a href="http://drupal.org/security" title="Advisories from the security team">Security Announcements</a></li>
+<li class="5 last"><a href="http://groups.drupal.org/jobs" title="Jobs posted on groups.drupal.org">Jobs</a></li>
+</ul></div><div class="grid-footer"><ul><li class="0 first"><a href="http://drupal.org/community">Community</a></li>
+<li class="1"><a href="http://drupal.org/getting-involved" title="Learn how to contribute to the Drupal project">Getting Involved</a></li>
+<li class="2"><span><a href="http://drupal.org/drupal-services" title="People and organizations offering Drupal services">Services</a>, <a href="http://drupal.org/training" title="People and organizations offering Drupal training">Training</a> & <a href="http://drupal.org/hosting" title="Organizations offering Drupal hosting">Hosting</a></span></li>
+<li class="3"><a href="http://groups.drupal.org/groups" title="groups.drupal.org">Groups &amp; Meetups</a></li>
+<li class="4 last"><a href="http://drupal.org/drupalcon" title="Upcoming and past DrupalCons">DrupalCon</a></li>
+</ul></div><div class="grid-footer"><ul><li class="0 first"><a href="http://drupal.org/start">Get Started</a></li>
+<li class="1"><a href="http://drupal.org/documentation" title="Guidebooks and documentation for working with Drupal">Documentation Home</a></li>
+<li class="2"><a href="http://drupal.org/documentation/install" title="Guide for installing Drupal">Installation Guide</a></li>
+<li class="3"><a href="http://drupal.org/documentation/build" title="Guide for building and extending Drupal sites">Site Building Guide</a></li>
+<li class="4"><a href="http://drupal.org/support" title="Drupal support options">Support</a></li>
+<li class="5 last"><a href="http://api.drupal.org/" title="Drupal API Reference">api.drupal.org</a></li>
+</ul></div><div class="grid-footer"><ul><li class="0 first"><a href="http://drupal.org/download">Download &amp; Extend</a></li>
+<li class="1"><a href="http://drupal.org/project/drupal" title="Download the latest version of the Drupal software">Drupal Core</a></li>
+<li class="2"><a href="http://drupal.org/project/modules" title="Download add-on features and functionality">Modules</a></li>
+<li class="3"><a href="http://drupal.org/project/themes" title="Download pre-designed styles for Drupal">Themes</a></li>
+<li class="4 last"><a href="http://drupal.org/project/distributions" title="Download a pre-packaged Drupal site">Distributions</a></li>
+</ul></div><div class="grid-footer omega"><ul><li class="0 first"><a href="http://drupal.org/about">About</a></li>
+<li class="1"><a href="http://drupal.org/druplicon" title="Drupal’s mascot">Druplicon</a></li>
+<li class="2"><a href="https://association.drupal.org/about" title="About the Drupal Association">The Drupal Association</a></li>
+<li class="3"><a href="https://association.drupal.org/advertising" title="How to advertise on Drupal.org">Advertise</a></li>
+<li class="4"><a href="http://drupal.org/node/179723" title="About Drupal.org">About Drupal.org</a></li>
+<li class="5 last"><a href="http://drupal.org/about/accessibility">Web accessibility</a></li>
+</ul></div>          </div> <!-- /#footer-region-inner -->
+        </div> <!-- /#footer-region -->
+                    <div id="footer-message" class="grid-12">
+          <div id="footer-message-inner" class="clear-block">
+            <p>Drupal is a <a href="http://drupal.com/trademark">registered trademark</a> of <a href="http://buytaert.net">Dries Buytaert</a>.</p>
+          </div> <!-- /#footer-message-inner -->
+        </div> <!-- /#footer-message -->
+          </div> <!-- /#footer-inner -->
+  </div> <!-- /#footer -->
+  <div><a href="http://drupal.org/sites/all/modules/httpbl/donotremove.php"></a></div><script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var _gaq = _gaq || [];_gaq.push(["_setAccount", "UA-2360451-1"]);_gaq.push(["_trackPageview"]);(function() {var ga = document.createElement("script");ga.type = "text/javascript";ga.async = true;ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(ga, s);})();
+//--><!]]>
+</script>
+</body>
+</html>
