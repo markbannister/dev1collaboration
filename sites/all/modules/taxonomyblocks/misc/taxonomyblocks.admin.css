@@ -1,0 +1,4 @@
+
+html.js div.contextual-links-wrapper { position: relative; }
+div.contextual-links-wrapper a{ display: block; }
+ul.contextual-links{ right: auto !important; left: -35px; }

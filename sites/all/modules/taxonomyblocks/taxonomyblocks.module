@@ -1,0 +1,163 @@
+<?php
+/**
+ * @file
+ * taxonomyblocks.module
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function taxonomyblocks_menu() {
+  $items['admin/config/taxonomyblocks'] = array(
+    'title' => 'Advanced Taxonomy Blocks Configuration',
+    'file' => 'taxonomyblocks.admin.inc',
+    'page callback' => 'taxonomyblocks_list_page_callback',
+    'access arguments' => array('administer taxonomy'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
+  $items['admin/config/taxonomyblocks/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  );
+  
+  $items['admin/config/taxonomyblocks/add'] = array(
+    'title' => 'Add New Taxonomy Block',
+    'file' => 'taxonomyblocks.admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('taxonomy_blocks_add_form'),
+    'access arguments' => array('administer taxonomy'),
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  );
+  
+  $items['admin/config/taxonomyblocks/configure/%taxonomyblocks'] = array(
+    'title' => 'Configure',
+    'file' => 'taxonomyblocks.admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('taxonomyblocks_config_form', 4),
+    'access arguments' => array('administer taxonomy'),
+    'type' => MENU_CALLBACK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  );
+  
+  $items['admin/config/taxonomyblocks/delete/%taxonomyblocks'] = array(
+    'title' => 'Configure',
+    'file' => 'taxonomyblocks.admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('taxonomy_blocks_delete_form', 4),
+    'access arguments' => array('administer taxonomyblocks'),
+    'type' => MENU_CALLBACK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  );
+  
+  $items['admin/config/taxonomyblocks/reset/%taxonomyblocks'] = array(
+    'title' => 'Configure',
+    'access arguments' => array('administer taxonomyblocks'),
+    'file' => 'taxonomyblocks.admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('taxonomy_blocks_reset_form', 4),
+    'type' => MENU_CALLBACK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  );
+  
+  return $items;
+}
+
+/**
+ * Implements hook_permission
+ */
+function taxonomyblocks_permission() {
+  return array(
+    'administer taxonomyblocks' => array(
+      'title' => t('Administer Taxonomy Blocks'), 
+      'description' => t('Perform administration tasks for the Taxonomy Blocks module.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function taxonomyblocks_theme($existing, $type, $theme, $path) {
+  return array(
+    'taxonomyblocks_config_form' => array(
+      'file' => 'taxonomyblocks.admin.inc',
+      'render element' => 'form',
+    ),
+    'taxonomyblocks_tree' => array(
+      'file' => 'taxonomyblocks.inc',
+      'render element' => 'element',
+    ),
+  );
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function taxonomyblocks_block_info() {
+  $rows = db_select('tb_added_list', 'tb')
+              ->fields('tb', array('tb_id', 'block_title'))
+              ->execute()
+              ->fetchAll();
+  foreach ($rows as $row) {
+    $blocks[$row->tb_id]['info'] = $row->block_title;
+  }
+
+  return isset($blocks) ? $blocks : array();
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function taxonomyblocks_block_view($delta = '') {
+  if ($block = taxonomyblocks_load($delta)) {
+    return array(
+      'subject' => $row->block_title,
+      'content' => array(
+        '#theme' => 'taxonomyblocks_tree',
+        '#block' => $block,
+      ),
+    );
+  }
+}
+
+/**
+ * Implementation of hook_taxonomy().
+ */
+function taxonomyblocks_taxonomy($op, $type, $array = NULL) {
+  if ($type == 'vocabulary' && $op == 'delete') {
+    db_delete('tb_customized')
+      ->condition('vid', (int)$array['vid'])
+      ->execute();
+  }
+}
+
+/**
+ * Load TB by ID.
+ */
+function taxonomyblocks_load($tb_id) {
+  $block = db_select('tb_added_list', 'tb')
+            ->fields('tb')
+            ->condition('tb.tb_id', $tb_id)
+            ->execute()
+            ->fetch();
+
+  if ($block) {
+    $block->omit_tids = !empty($block->omit_tids) ? explode(',', $block->omit_tids) : array();
+    $block->open_tids = !empty($block->open_tids) ? explode(',', $block->open_tids) : array();
+
+    if ($block->custom) {
+      $block->data = db_select('tb_customized', 'tb')
+                      ->fields('tb')
+                      ->condition('tb_id', $tb_id)
+                      ->condition('enabled', 1)
+                      ->orderBy('weight')
+                      ->execute()
+                      ->fetchAll();
+    }
+  }
+  return $block ? $block : FALSE;
+}
