@@ -8,7 +8,6 @@
  * Integrated Organic Group, Role and User permissions to secure folders, automated notifications,
  * Tag Cloud integrated search, version managment, user flagged favorite files and more.
  */
-
 global $filedepot, $nexcloud;
 global $_numfolders2create, $_numfiles2create, $_maxrecordsperfolder, $_validfolders;
 
@@ -117,6 +116,7 @@ function filedepot_permission() {
 function filedepot_menu() {
   $items = array();
 
+
   $items['filedepot'] = array(
     'title'          => 'Filedepot',
     'page callback'  => 'filedepot_main',
@@ -217,10 +217,10 @@ function filedepot_menu() {
     'access arguments' => array('access filedepot'),
     'type' => MENU_CALLBACK,
   );
-
-
+  
   return $items;
 }
+
 
 /**
  * Implementation of hook_theme().
@@ -513,19 +513,18 @@ function filedepot_node_access($node, $op) {
   return $ret;
 }
 
-
 /**
  * Implementation of hook_help().
  */
-function filedepot_help($path,$arg){
- switch($path){
- case 'admin/help#filedepot';
+function filedepot_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#filedepot';
       $output = '';
       $output .= '<h3>' . t('Requirements') . '</h3>';
       $output .= '<p>' . t('PHP 5.2+ and PHP JSON library enabled. As of PHP 5.2.0, the JSON extension is bundled and compiled into PHP by default.') . '</p>';
       $output .= '<h3>' . t('Installation') . '</h3>';
       $output .= '<p>' . t('Filedepot requires two external javascript libraries to be installed and uses the Drupal libraries module API to manage access to them. ');
-      $output .=  t('Either version 1 or 2 of the libraries module is supported. You will need to create a <i>sites/all/libraries</i> folder if you don\'t already have the libraries module installed.') . '</p><p>' . t('If you have drush installed, you will want to use the provided drush command to download and install the 3rd party.') . '</p>';
+      $output .= t('Either version 1 or 2 of the libraries module is supported. You will need to create a <i>sites/all/libraries</i> folder if you don\'t already have the libraries module installed.') . '</p><p>' . t('If you have drush installed, you will want to use the provided drush command to download and install the 3rd party.') . '</p>';
       $output .= '<dl>';
       $output .= '<dt><b>' . t('Using Drush to install requried libraries') . '</b></dt>';
       $output .= '<ul>';
@@ -543,8 +542,8 @@ function filedepot_help($path,$arg){
       $output .= '</ul>';
       $output .= '<li>' . t('The following javascript files then need to be retrieved and saved to their respective folders under the sites/all/libraries folder.');
       $output .= '<ul>';
-      $output .= '<li>' . t('<a href="@url" target="_new">html_encoder.js</a> - SAVE FILE as: html_encoder/html_encoder.js', array('@url' => 'http://www.strictly-software.com/scripts/downloads/encoder.js') ) . '</li>';
-      $output .= '<li>' . t('<a href="@url" target="_new">jquery.blockui.js</a> - SAVE FILE as: jquery.blockui/jquery.blockui.js', array('@url' => 'http://jquery.malsup.com/block/#download') ) . '</li>';
+      $output .= '<li>' . t('<a href="@url" target="_new">html_encoder.js</a> - SAVE FILE as: html_encoder/html_encoder.js', array('@url' => 'http://www.strictly-software.com/scripts/downloads/encoder.js')) . '</li>';
+      $output .= '<li>' . t('<a href="@url" target="_new">jquery.blockui.js</a> - SAVE FILE as: jquery.blockui/jquery.blockui.js', array('@url' => 'http://jquery.malsup.com/block/#download')) . '</li>';
       $output .= '</ul>';
       $output .= '</ol>';
       $output .= '<dt><b>' . t('Final Steps') . '</b></dt>';
@@ -561,14 +560,10 @@ function filedepot_help($path,$arg){
       $output .= '<li>' . t('You can also create new folders and upload files (attachments) via the native Drupal Content Add/View/Edit interface.') . '</li>';
       $output .= '<li>' . t('A new content type is automatically created <i>filedepot_folder</i>') . '</li>';
       $output .= '</ul>';
-  return $output;
- break;
- }
-
-
+      return $output;
+      break;
+  }
 }
-
-
 
 /**
  * Checks to see if OG mode is enabled or not
@@ -1049,7 +1044,7 @@ function filedepot_download($node, $fid, $version, $mode = '') {
           }
         }
 
-        watchdog('filedepot', "Download of incoming file: @file (!fid) by user @user", array('@file' => $filetitle, '!fid'  => $fid, '@user' => $user->name));
+        watchdog('filedepot', "Download of incoming file: @file (!fid) by user @user", array('@file' => $filetitle, '!fid'  => $fid, '@user' => isset($user->name) ? $user->name : "Anonymous"));
 
         $headers = array(
           'Content-Type: ' . $type . '; name="' . $filetitle . '"',
@@ -1117,7 +1112,7 @@ function filedepot_download($node, $fid, $version, $mode = '') {
           "@fid"        => $fid,
           "@drupal_fid" => $drupal_fid,
           "@cid"        => $cid,
-          "@username"   => $user->name,
+          "@username"   => isset($user->name) ? $user->name : "Anonymous",
         ));
         return drupal_access_denied();
       }
@@ -1132,7 +1127,7 @@ function filedepot_download($node, $fid, $version, $mode = '') {
       if ($filedepot->checkPermission($cid, 'view') === FALSE) {
         watchdog('filedepot', "Download request for incoming file invalid access to folder (@cid) for user: @username", array(
           "@cid"      => $cid,
-          "@username" => $user->name,
+          "@username" => isset($user->name) ? $user->name : "Anonymous",
         ));
         return drupal_access_denied();
       }
@@ -1155,7 +1150,7 @@ function filedepot_download($node, $fid, $version, $mode = '') {
           $type        = mime_header_encode($file->filemime);
         }
 
-        watchdog('filedepot', "Download of file: @file (!fid), version !version by user @user", array('@file'    => $filetitle, '!fid'     => $fid, '!version' => $version, '@user'    => $user->name));
+        watchdog('filedepot', "Download of file: @file (!fid), version !version by user @user", array('@file'    => $filetitle, '!fid'     => $fid, '!version' => $version, '@user'    => isset($user->name) ? $user->name : "Anonymous") );
 
 
         /* We can assume the repository is setup using Drupal's private filesystem
@@ -1279,7 +1274,7 @@ function filedepot_file_delete($file) {
           "@cid"     => $cid,
           "@dfid"    => $A['drupal_fid'],
         ));
-        $file = file_load($A['drupal_fid']);
+        $file      = file_load($A['drupal_fid']);
         if ($file) {
           file_usage_delete($file, 'filedepot');
           $file->version = $A['version'];
@@ -1583,8 +1578,8 @@ function filedepot_mail($key, &$message, $params) {
       break;
 
     case FILEDEPOT_NOTIFY_REJECT: // File submission being declined by admin where $id = new submission record id. Send only to user
-      $fname = db_query("SELECT fname FROM {filedepot_filesubmissions} WHERE id=:fid", array(':fid'     => $id))->fetchField();
-      $submitter = db_query("SELECT submitter FROM {filedepot_filesubmissions} WHERE id=:fid", array(':fid'              => $id))->fetchField();
+      $query = db_query("SELECT fname, cid, submitter FROM {filedepot_filesubmissions} WHERE id=:fid", array(':fid'              => $id));
+      list($fname, $cid, $submitter) = array_values($query->fetchAssoc());
       $message['subject'] = variable_get('site_name', '') . ' - ' . t('New File Submission Cancelled');
       $message_body       = t('Your recent file submission: !file, was not accepted', array('!file'            => $fname)) . "\n\n";
       $message_body .= t('Thank You') . "\n";
@@ -1814,16 +1809,18 @@ function template_preprocess_filedepot_tagcloud(&$variables) {
   // Filedepot Admin's should be able to view all tags
   if (!user_access('administer filedepot', $user)) {
     if (!empty($groupids)) {
-      $query->condition(db_or()->condition('roleid', $user->roles, 'IN')->condition('groupid',$og_entity_groups));
-    } else {
+      $query->condition(db_or()->condition('roleid', $user->roles, 'IN')->condition('groupid', $og_entity_groups));
+    }
+    else {
       $query->condition('roleid', $user->roles, 'IN');
     }
-  } elseif (!empty($groupids)) {
-      $query->condition('groupid', $og_entity_groups, 'IN');
+  }
+  elseif (!empty($groupids)) {
+    $query->condition('groupid', $og_entity_groups, 'IN');
   }
   $query->orderBy('metric', 'DESC');
-  $query->range(0,1);
-  $rec    = $query->execute()->fetchAssoc();
+  $query->range(0, 1);
+  $rec = $query->execute()->fetchAssoc();
 
   $tags = 0;
   if ($rec) {
@@ -1842,7 +1839,8 @@ function template_preprocess_filedepot_tagcloud(&$variables) {
     if (!empty($nexcloud->_activetags)) {
       $sql .= "AND a.tagid NOT in ({$nexcloud->_activetags}) ";
     }
-    $sql .= "GROUP BY tagid ORDER BY a.tagid ASC, metric DESC";
+    
+    $sql .= "GROUP BY a.tagid, b.tagword, a.metric ORDER BY a.tagid ASC, metric DESC";
     $query = db_query($sql);
     while ($A     = $query->fetchAssoc()) {
       $variables['tagwords'] .= theme('filedepot_tagcloud_record', array('rec'  => $A, 'maxm' => $maxm));
@@ -2054,11 +2052,14 @@ function filedepot_newfile_submit($form, &$form_state) {
   // Retrieve the upload location - parent folder node id
   $folder_nid = db_query("SELECT nid FROM {filedepot_categories} WHERE cid=:cid", array(':cid' => $cid))->fetchField();
   $node  = node_load($folder_nid);
-
-  $upload_direct       = $filedepot->checkPermission($cid, 'upload_dir');
-  $upload_moderated    = $filedepot->checkPermission($cid, 'upload');
-  $upload_new_versions = $filedepot->checkPermission($cid, 'upload_ver');
-  if (!$upload_direct AND $upload_moderated) { // Admin's have all perms so test for users with upload moderated approval only
+  $cid_perms = $filedepot->getPermissionObject($cid);
+  
+  if ($cid_perms->canUpload() === FALSE) {
+    drupal_set_message(t('Insufficient priviledges to upload to this folder'), 'error');
+    return;
+  }
+  watchdog("filedepot_test", var_export($cid_perms, TRUE));
+  if ($cid_perms->canUploadDirect() === FALSE) { // Admin's have all perms so test for users with upload moderated approval only
     $moderated           = TRUE;
     $private_destination = 'private://filedepot/' . $node->folder . '/submissions/';
   }

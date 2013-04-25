@@ -14,7 +14,7 @@ define('FILEDEPOT_TOKEN_LISTING', 'filedepot_token_listing');
 
 function filedepot_dispatcher($action) {
   global $user;
-
+  
   $filedepot = filedepot_filedepot();
   $nexcloud = filedepot_nexcloud();
   module_load_include('php', 'filedepot', 'lib-theme');
@@ -25,9 +25,28 @@ function filedepot_dispatcher($action) {
     timer_start('filedepot_timer');
   }
   firelogmsg("AJAX Server code executing - action: $action");
-
+  
   switch ($action) {
-
+    case 'archive':
+      if ((isset($_GET['checked_files'])) && (isset($_GET['checked_folders']))) {
+         module_load_include('php', 'filedepot', 'filedepot_archiver.class');
+        $checked_files = json_decode($_GET['checked_files'], TRUE);
+        $checked_folders = json_decode($_GET['checked_folders'], TRUE);
+        //print_r($checked_files);
+        //die(1);
+        $fa = new filedepot_archiver();
+        $fa->createAndCleanArchiveDirectory();
+        $fa->addCheckedObjectArrays($checked_files, $checked_folders);
+        $fa->createArchive();
+        $fa->close();
+        $fa->download();
+        return;
+      }
+      else {
+        echo "Invalid Parameters";
+        return;
+      }
+      break;
     case 'getfilelisting':
       $cid = intval($_POST['cid']);
       if ($cid > 0) {
@@ -223,8 +242,9 @@ function filedepot_dispatcher($action) {
           while ($A = $itemquery->fetchAssoc()) {
             if ($_POST['direction'] == 'down') {
               $sql  = "SELECT folderorder FROM {filedepot_categories} WHERE pid=:pid ";
-              $sql .= "AND folderorder > :folderorder ORDER BY folderorder ASC LIMIT 1";
-              $nextorder = db_query($sql, array(':pid' => $A['pid'], ':folderorder' => $A['folderorder']))->fetchField();
+              $sql .= "AND folderorder > :folderorder ORDER BY folderorder ASC ";
+              
+              $nextorder = db_query_range($sql, 0, 1, array(':pid' => $A['pid'], ':folderorder' => $A['folderorder']))->fetchField();
               if ($nextorder > $A['folderorder']) {
                 $folderorder = $nextorder + 5;
               }
@@ -238,8 +258,8 @@ function filedepot_dispatcher($action) {
             }
             elseif ($_POST['direction'] == 'up') {
               $sql  = "SELECT folderorder FROM {filedepot_categories} WHERE pid=:pid ";
-              $sql .= "AND folderorder < :folderorder ORDER BY folderorder DESC LIMIT 1";
-              $nextorder = db_query($sql, array(
+              $sql .= "AND folderorder < :folderorder ORDER BY folderorder DESC ";
+              $nextorder = db_query_range($sql, 0, 1, array(
                 ':pid' => $A['pid'],
                 ':folderorder' => $A['folderorder'],
               ))->fetchField();
