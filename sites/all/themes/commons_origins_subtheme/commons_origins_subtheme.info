@@ -1,0 +1,30 @@
+;---- 5-2013
+;---- followed instructions here: http://drupal.org/node/1380848
+;---- This sub-theme allows one to customize the theme without loosing
+;---- changes when the original theme is updated
+;---- any css changes
+;---- per Rosemeria http://drupal.org/node/1380848#comment-7162278
+;---- Place your css overrides in css/custom.css. Use custom.css to provide overrides to the main styles. This file always loads ;---- last so you can override anything in the other style-sheets.
+;---- More info for AT themes - http://adaptivethemes.com/documentation
+
+name = Commons Origins Subtheme
+description = A test theme of commons origins.
+base theme = commons_origins
+core = 7.x
+;----------// Stylesheets
+ stylesheets[screen][] = css/custom.css
+
+regions[sidebar_first] = Sidebar first
+regions[sidebar_second] = Sidebar second
+regions[content] = Main Content
+regions[highlighted] = Highlighted
+regions[content_aside] = Aside
+regions[secondary_content] = Secondary
+regions[tertiary_content] = Tertiary
+regions[footer] = Footer
+regions[leaderboard] = Leaderboard
+regions[header] = Header
+regions[menu_bar] = Menu Bar
+regions[help] = Help
+regions[page_top] = Page top
+regions[page_bottom] = Page bottom
